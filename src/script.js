@@ -7,7 +7,6 @@ import { TWEEN } from 'three/examples/jsm/libs/tween.module.min.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
-import CannonDebugger from 'cannon-es-debugger';
 
 /////////////////////////////////////////////////////////////////////////
 //// DRACO LOADER TO LOAD DRACO COMPRESSED MODELS FROM BLENDER
@@ -45,8 +44,6 @@ scene.add(camera)
 camera.position.set(5,30,20); // Set position like this
 camera.lookAt(new THREE.Vector3(0,0,0)); // Set look at coordinate like this
 
-var dice
-
 
 /////////////////////////////////////////////////////////////////////////
 ///// MAKE EXPERIENCE FULL SCREEN
@@ -74,13 +71,21 @@ sunLight.position.set(-69,44,14)
 sunLight.castShadow = true;
 scene.add(sunLight)
 
+
+/////////////////////////////////////////////////////////////////////////
+////// VARIABLES
+var is_rolling = false;
+
 /////////////////////////////////////////////////////////////////////////
 ///// LOADING GLB/GLTF MODEL FROM BLENDER
+
+let dice = 0
+
 loader.load( 'models/gltf/dice.glb', function ( gltf ) {
 
 	dice =  gltf.scene;
   dice.scale.set(2,2,2);
-  dice.position.set(0, 30, 0)
+  dice.position.set(0, 15, 0)
   dice.castShadow = true;
   dice.receiveShadow = true;
   scene.add(dice);
@@ -158,11 +163,11 @@ const diceBody = new CANNON.Body({
   material: boxPhysMat
 });
 
-diceBody.position.set(0, 30, 0);
+diceBody.position.set(0, 15, 0);
 physicsWorld.addBody(diceBody);
 
 //diceBody.angularVelocity.set(0, 6, 3);
-diceBody.applyImpulse(new CANNON.Vec3(-4, 3, 1),new CANNON.Vec3(1, 0, 0))
+diceBody.applyImpulse(new CANNON.Vec3(-4, 3, 1),new CANNON.Vec3(1, 0, 0));
 diceBody.angularDamping = 0.5;
 
 const groundBoxContactMat = new CANNON.ContactMaterial(
@@ -173,15 +178,30 @@ const groundBoxContactMat = new CANNON.ContactMaterial(
 
 physicsWorld.addContactMaterial(groundBoxContactMat);
 
+///////////////////////////////////////////////////
+////// ROLL FUNCTION
+
+function roll(){
+  diceBody.position.set(0, 15, 0);
+  diceBody.applyImpulse(new CANNON.Vec3(-4, 3, 1),new CANNON.Vec3(1, 0, 0))
+}
+
+function doneRolling(){
+  is_rolling = true;
+}
+
+setTimeout(doneRolling, 3500);
+
 function animate() {
   physicsWorld.fixedStep();
   
 	requestAnimationFrame( animate );
-  if (diceBody.position != undefined && dice.position.copy != undefined){
-    dice.position.copy(diceBody.position);
-    dice.quaternion.copy(diceBody.quaternion);
+  if (diceBody.position === undefined || dice.position === undefined){
+    return   
   }
-  console.log(dice.position);
+  dice.position.copy(diceBody.position);
+  dice.quaternion.copy(diceBody.quaternion);
+  //console.log(dice.position);
 
 }
 
@@ -193,3 +213,28 @@ window.addEventListener("resize", ()=>{
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
+
+document.addEventListener('mouseup', function(e) {
+  if (is_rolling == false){
+    console.log("not rolling");
+    return;
+  }
+  var e = e || window.event;
+  var btnCode;
+  
+  btnCode = e.button;
+
+  switch (btnCode) {
+    case 0:
+      is_rolling = false;
+      roll();
+      console.log(is_rolling);
+      setTimeout(doneRolling, 3500);
+
+      console.log('Left button clicked.');
+      break;
+
+    default:
+      console.log('Unexpected code: ' + btnCode);
+  }
+})
