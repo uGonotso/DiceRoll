@@ -41,7 +41,7 @@ container.appendChild(renderer.domElement) // add the renderer to html div
 ///// CAMERAS CONFIG
 const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 2000 );
 scene.add(camera)
-camera.position.set(5,30,20); // Set position like this
+camera.position.set(5,25,25); // Set position like this
 camera.lookAt(new THREE.Vector3(0,0,0)); // Set look at coordinate like this
 
 
@@ -75,6 +75,22 @@ scene.add(sunLight)
 /////////////////////////////////////////////////////////////////////////
 ////// VARIABLES
 var is_rolling = false;
+
+/////////////////////////////////////////////////////////////////////////
+////// AUDIO
+const listener = new THREE.AudioListener();
+camera.add(listener);
+
+
+const diceSound = new THREE.Audio(listener);
+const audioLoader = new THREE.AudioLoader();
+
+audioLoader.load('sounds/Dice.mp3', function(buffer){
+  diceSound.setBuffer( buffer );
+	diceSound.setLoop( false );
+	diceSound.setVolume( 0.5);
+	//diceSound.play();
+});
 
 /////////////////////////////////////////////////////////////////////////
 ///// LOADING GLB/GLTF MODEL FROM BLENDER
@@ -190,7 +206,13 @@ function doneRolling(){
   is_rolling = true;
 }
 
+function playDiceSound(){
+  diceSound.play();
+}
+
 setTimeout(doneRolling, 3500);
+setTimeout(playDiceSound, 2500);
+
 
 function animate() {
   physicsWorld.fixedStep();
@@ -230,8 +252,7 @@ document.addEventListener('mouseup', function(e) {
       roll();
       console.log(is_rolling);
       setTimeout(doneRolling, 3500);
-
-      console.log('Left button clicked.');
+      setTimeout(playDiceSound, 2500);
       break;
 
     default:
