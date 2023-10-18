@@ -142,7 +142,7 @@ const diceBody = new CANNON.Body({
 diceBody.position.set(0, 8, 0);
 physicsWorld.addBody(diceBody);
 
-diceBody.angularVelocity.set(10, 10, 0 );
+diceBody.angularVelocity.set(3, 2, 0 );
 diceBody.angularDamping = 0.5;
 
 const groundBoxContactMat = new CANNON.ContactMaterial(
@@ -163,6 +163,7 @@ function animate() {
 	requestAnimationFrame( animate );
   if (diceBody.position != undefined && dice.position.copy != undefined){
     dice.position.copy(diceBody.position);
+    dice.quaternion.copy(diceBody.quaternion);
   }
   console.log(dice.position);
 
