@@ -25,7 +25,7 @@ document.body.appendChild(container)
 /////////////////////////////////////////////////////////////////////////
 ///// SCENE CREATION
 const scene = new THREE.Scene()
-scene.background = new THREE.Color('#c8f0f9')
+scene.background = new THREE.Color('#EEEEEE')
 
 
 /////////////////////////////////////////////////////////////////////////
@@ -34,13 +34,15 @@ const renderer = new THREE.WebGLRenderer({ antialias: true}) // turn on antialia
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)) //set pixel ratio
 renderer.setSize(window.innerWidth, window.innerHeight) // make it full screen
 renderer.outputEncoding = THREE.sRGBEncoding // set color encoding
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.BasicShadowMap;
 container.appendChild(renderer.domElement) // add the renderer to html div
 
 /////////////////////////////////////////////////////////////////////////
 ///// CAMERAS CONFIG
 const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 2000 );
 scene.add(camera)
-camera.position.set(0,10,4); // Set position like this
+camera.position.set(5,30,20); // Set position like this
 camera.lookAt(new THREE.Vector3(0,0,0)); // Set look at coordinate like this
 
 var dice
@@ -64,11 +66,12 @@ const controls = new OrbitControls(camera, renderer.domElement)
 
 /////////////////////////////////////////////////////////////////////////
 ///// SCENE LIGHTS
-const ambient = new THREE.AmbientLight(0xa0a0fc, 0.82)
+const ambient = new THREE.AmbientLight(0xFFFFFF, 0.5)
 scene.add(ambient)
 
-const sunLight = new THREE.DirectionalLight(0xe8c37b, 1.96)
+const sunLight = new THREE.DirectionalLight(0xFFFFFF, 1.96)
 sunLight.position.set(-69,44,14)
+sunLight.castShadow = true;
 scene.add(sunLight)
 
 /////////////////////////////////////////////////////////////////////////
@@ -76,6 +79,10 @@ scene.add(sunLight)
 loader.load( 'models/gltf/dice.glb', function ( gltf ) {
 
 	dice =  gltf.scene;
+  dice.scale.set(2,2,2);
+  dice.position.set(0, 30, 0)
+  dice.castShadow = true;
+  dice.receiveShadow = true;
   scene.add(dice);
 
 }, undefined, function ( error ) {
@@ -83,6 +90,17 @@ loader.load( 'models/gltf/dice.glb', function ( gltf ) {
 	console.error( error );
 
 } );
+
+//////////////////////////////////////////////////////////////////////////
+///// ADD PLANE TO SCENE
+const geometry = new THREE.PlaneGeometry( 200, 200 );
+const material = new THREE.MeshBasicMaterial( {color: 0xFFFFFF, side: THREE.DoubleSide,} );
+const plane = new THREE.Mesh( geometry, material );
+plane.rotateX( - Math.PI / 2);
+plane.position.set(0,1,0);
+plane.receiveShadow = true;
+plane.castShadow = true;
+scene.add( plane );
 
 
 /////////////////////////////////////////////////////////////////////////
@@ -125,9 +143,10 @@ const physicsWorld = new CANNON.World({
 
 const groundBody = new CANNON.Body({
   type: CANNON.Body.STATIC,
-  shape: new CANNON.Plane(),
-  material: groundPhysMat
+  shape: new CANNON.Box(new CANNON.Vec3(50,50,1)),
+  material: groundPhysMat,
 })
+
 
 groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 physicsWorld.addBody(groundBody)
@@ -139,23 +158,20 @@ const diceBody = new CANNON.Body({
   material: boxPhysMat
 });
 
-diceBody.position.set(0, 8, 0);
+diceBody.position.set(0, 30, 0);
 physicsWorld.addBody(diceBody);
 
-diceBody.angularVelocity.set(3, 2, 0 );
+//diceBody.angularVelocity.set(0, 6, 3);
+diceBody.applyImpulse(new CANNON.Vec3(-4, 3, 1),new CANNON.Vec3(1, 0, 0))
 diceBody.angularDamping = 0.5;
 
 const groundBoxContactMat = new CANNON.ContactMaterial(
   groundPhysMat,
   boxPhysMat,
-  {friction: 0.3,restitution:0.4}
+  {restitution:0.1,friction:0.02}
 );
 
 physicsWorld.addContactMaterial(groundBoxContactMat);
-
-const cannonDebugger = new CannonDebugger(scene.scene, physicsWorld, {
-  //color: 0xff0000,
-});
 
 function animate() {
   physicsWorld.fixedStep();
@@ -167,7 +183,6 @@ function animate() {
   }
   console.log(dice.position);
 
-  
 }
 
 animate();
