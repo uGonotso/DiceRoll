@@ -162,7 +162,7 @@ rendeLoop() //start rendering
 const groundPhysMat = new CANNON.Material();
 
 const physicsWorld = new CANNON.World({
-  gravity: new CANNON.Vec3(0, -9.82, 0),
+  gravity: new CANNON.Vec3(0, -11.82, 0),
 });
 
 const groundBody = new CANNON.Body({
@@ -192,7 +192,7 @@ diceBody.angularDamping = 0.5;
 const groundBoxContactMat = new CANNON.ContactMaterial(
   groundPhysMat,
   boxPhysMat,
-  {restitution:0.1,friction:0.02}
+  {restitution:0.01,friction:0.02}
 );
 
 physicsWorld.addContactMaterial(groundBoxContactMat);
@@ -201,8 +201,16 @@ physicsWorld.addContactMaterial(groundBoxContactMat);
 ////// ROLL FUNCTION
 
 function roll(){
+  var min = -1000
+  var max = 1000
+  var xImpulse = Math.random() * (max - min) + min;
+  var yImpulse = Math.random() * (max - min) + min;
+  var zImpulse = Math.random() * (max - min) + min;
   diceBody.position.set(0, 15, 0);
-  diceBody.applyImpulse(new CANNON.Vec3(-4, 3, 1),new CANNON.Vec3(1, 0, 0))
+  diceBody.velocity.set(0,0,0);
+  diceBody.angularVelocity.set(0,0,0);
+  //diceBody.applyImpulse(new CANNON.Vec3(xImpulse, yImpulse, zImpulse),new CANNON.Vec3(1, 0, 0))
+  diceBody.applyForce(new CANNON.Vec3(xImpulse, yImpulse, zImpulse),new CANNON.Vec3(0, 0, 0))
 }
 
 function doneRolling(){
