@@ -104,7 +104,7 @@ loader.load( 'models/gltf/dice.glb', function ( gltf ) {
 
 	dice =  gltf.scene;
   dice.scale.set(2,2,2);
-  dice.position.set(0, 15, 0)
+  dice.position.set(0, 5, 0)
   dice.castShadow = true;
   dice.receiveShadow = true;
   scene.add(dice);
@@ -182,11 +182,11 @@ const diceBody = new CANNON.Body({
   material: boxPhysMat
 });
 
-diceBody.position.set(0, 15, 0);
+diceBody.position.set(0, 5, 0);
 physicsWorld.addBody(diceBody);
 
 //diceBody.angularVelocity.set(0, 6, 3);
-diceBody.applyImpulse(new CANNON.Vec3(-4, 3, 1),new CANNON.Vec3(1, 0, 0));
+//diceBody.applyImpulse(new CANNON.Vec3(-4, 3, 1),new CANNON.Vec3(1, 0, 0));
 diceBody.angularDamping = 0.5;
 
 const groundBoxContactMat = new CANNON.ContactMaterial(
@@ -211,6 +211,9 @@ function doneRolling(){
 }
 
 function playDiceSound(){
+  if (diceSound.isPlaying === true){
+    diceSound.stop();
+  }
   diceSound.play();
 }
 
@@ -227,8 +230,6 @@ function animate() {
   }
   dice.position.copy(diceBody.position);
   dice.quaternion.copy(diceBody.quaternion);
-  //console.log(dice.position);
-
 }
 
 animate();
