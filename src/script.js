@@ -73,8 +73,10 @@ scene.add(sunLight)
 
 
 /////////////////////////////////////////////////////////////////////////
-////// VARIABLES
+////// VARIABLES AND CONSTS
 var is_rolling = false;
+const throw_btn = document.getElementById("Throw");
+throw_btn.disabled = true;
 
 /////////////////////////////////////////////////////////////////////////
 ////// AUDIO
@@ -204,6 +206,7 @@ function roll(){
 
 function doneRolling(){
   is_rolling = true;
+  throw_btn.disabled = false;
 }
 
 function playDiceSound(){
@@ -236,26 +239,11 @@ window.addEventListener("resize", ()=>{
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-document.addEventListener('mouseup', function(e) {
-  if (is_rolling == false){
-    console.log("not rolling");
-    return;
-  }
-  var e = e || window.event;
-  var btnCode;
-  
-  btnCode = e.button;
-
-  switch (btnCode) {
-    case 0:
-      is_rolling = false;
-      roll();
-      console.log(is_rolling);
-      setTimeout(doneRolling, 3500);
-      setTimeout(playDiceSound, 2500);
-      break;
-
-    default:
-      console.log('Unexpected code: ' + btnCode);
-  }
-})
+throw_btn.addEventListener('click', throwClicked);
+function throwClicked(){
+  roll();
+  console.log(is_rolling);
+  setTimeout(doneRolling, 3500);
+  setTimeout(playDiceSound, 2500);
+  throw_btn.disabled = true;
+}
