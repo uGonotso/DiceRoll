@@ -41,7 +41,7 @@ container.appendChild(renderer.domElement) // add the renderer to html div
 ///// CAMERAS CONFIG
 const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 2000 );
 scene.add(camera)
-camera.position.set(5,25,25); // Set position like this
+camera.position.set(5,45,30); // Set position like this
 camera.lookAt(new THREE.Vector3(0,0,0)); // Set look at coordinate like this
 
 
@@ -124,7 +124,7 @@ plane.rotateX( - Math.PI / 2);
 plane.position.set(0,1,0);
 plane.receiveShadow = true;
 plane.castShadow = true;
-scene.add( plane );
+//scene.add( plane );
 
 
 /////////////////////////////////////////////////////////////////////////
@@ -173,7 +173,9 @@ const groundBody = new CANNON.Body({
 
 
 groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-physicsWorld.addBody(groundBody)
+//southBarrier.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
+physicsWorld.addBody(groundBody);
+//physicsWorld.addBody(southBarrier);
 
 const boxPhysMat = new CANNON.Material();
 const diceBody = new CANNON.Body({
@@ -192,7 +194,7 @@ diceBody.angularDamping = 0.5;
 const groundBoxContactMat = new CANNON.ContactMaterial(
   groundPhysMat,
   boxPhysMat,
-  {restitution:0.01,friction:0.02}
+  {restitution:0.1,friction:0.02}
 );
 
 physicsWorld.addContactMaterial(groundBoxContactMat);
@@ -201,16 +203,16 @@ physicsWorld.addContactMaterial(groundBoxContactMat);
 ////// ROLL FUNCTION
 
 function roll(){
-  var min = -1000
-  var max = 1000
+  var min = -1000;
+  var max = 1000;
   var xImpulse = Math.random() * (max - min) + min;
   var yImpulse = Math.random() * (max - min) + min;
   var zImpulse = Math.random() * (max - min) + min;
-  diceBody.position.set(0, 15, 0);
+  diceBody.position.set(0, 10, 0);
   diceBody.velocity.set(0,0,0);
   diceBody.angularVelocity.set(0,0,0);
   //diceBody.applyImpulse(new CANNON.Vec3(xImpulse, yImpulse, zImpulse),new CANNON.Vec3(1, 0, 0))
-  diceBody.applyForce(new CANNON.Vec3(xImpulse, yImpulse, zImpulse),new CANNON.Vec3(0, 0, 0))
+  diceBody.applyForce(new CANNON.Vec3(xImpulse, 0, zImpulse),new CANNON.Vec3(0, 0, 0))
 }
 
 function doneRolling(){
@@ -226,7 +228,7 @@ function playDiceSound(){
 }
 
 setTimeout(doneRolling, 3500);
-setTimeout(playDiceSound, 2500);
+setTimeout(playDiceSound, 200);
 
 
 function animate() {
@@ -254,6 +256,6 @@ function throwClicked(){
   roll();
   console.log(is_rolling);
   setTimeout(doneRolling, 3500);
-  setTimeout(playDiceSound, 2500);
+  setTimeout(playDiceSound, 1500);
   throw_btn.disabled = true;
 }
