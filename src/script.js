@@ -182,7 +182,7 @@ const northWallBody = new CANNON.Body({
   type: CANNON.Body.STATIC,
   shape: new CANNON.Plane,
   material: groundPhysMat,
-  position: new CANNON.Vec3(0,0,-22)
+  position: new CANNON.Vec3(0,0,-17)
 })
 
 physicsWorld.addBody(northWallBody);
@@ -201,7 +201,7 @@ const eastWallBody = new CANNON.Body({
   type: CANNON.Body.STATIC,
   shape: new CANNON.Plane,
   material: groundPhysMat,
-  position: new CANNON.Vec3(40,0,0)
+  position: new CANNON.Vec3(30,0,0)
 })
 eastWallBody.quaternion.setFromEuler(0, -Math.PI/2, 0);
 
@@ -211,7 +211,7 @@ const westWallBody = new CANNON.Body({
   type: CANNON.Body.STATIC,
   shape: new CANNON.Plane,
   material: groundPhysMat,
-  position: new CANNON.Vec3(-40,0,0)
+  position: new CANNON.Vec3(-30,0,0)
 })
 westWallBody.quaternion.setFromEuler(0, Math.PI/2, 0);
 
@@ -236,7 +236,7 @@ physicsWorld.addBody(diceBody);
 const groundBoxContactMat = new CANNON.ContactMaterial(
   groundPhysMat,
   boxPhysMat,
-  {restitution:0.0,friction:0.01}
+  {restitution:0.0,friction:0.05}
 );
 
 physicsWorld.addContactMaterial(groundBoxContactMat);
@@ -264,7 +264,7 @@ function roll(){
     var maxx = 1;
     var minz = -1;
     var maxz = 0;
-    diceBody.position.set(-30, 3, 10);
+    diceBody.position.set(-25, 3, 10);
     console.log("mr corner 1");
     console.log();
   }
@@ -274,7 +274,7 @@ function roll(){
     var maxx = 0;
     var minz = -1;
     var maxz = 0;
-    diceBody.position.set(30, 3, 10);
+    diceBody.position.set(25, 3, 10);
     console.log("mr corner 2")
   }
 
@@ -283,7 +283,7 @@ function roll(){
     var maxx = 1;
     var minz = 0;
     var maxz = 1;
-    diceBody.position.set(-30, 3, -20);
+    diceBody.position.set(-25, 3, -15);
     console.log("mr corner 3")
   }
 
@@ -292,7 +292,7 @@ function roll(){
     var maxx = 0;
     var minz = 0;
     var maxz = 1;
-    diceBody.position.set(30, 3, -20);
+    diceBody.position.set(25, 3, -15);
     console.log("mr corner 4")
   }
 
@@ -301,9 +301,9 @@ function roll(){
   var zImpulse = Math.random() * (maxz - minz) + minz;
   console.log("Impulse.x = " + xImpulse + " | " + "Impulse.z = " + zImpulse );
   diceBody.velocity.set(0,0,0);
-  //diceBody.angularVelocity.set(0,0,0);
+  diceBody.angularVelocity.set(0,0,0);
   //diceBody.applyImpulse(new CANNON.Vec3(xImpulse*35, 0, zImpulse*35),new CANNON.Vec3(0, 0, 0))
-  diceBody.applyForce(new CANNON.Vec3(xImpulse*6500, 0, zImpulse*6500),new CANNON.Vec3(0, 0, 0))
+  diceBody.applyForce(new CANNON.Vec3(xImpulse*7500, 0, zImpulse*7500),new CANNON.Vec3(0, 0, 0))
 }
 
 function doneRolling(){
@@ -319,7 +319,7 @@ function playDiceSound(){
 }
 
 setTimeout(doneRolling, 3500);
-setTimeout(playDiceSound, 200);
+//setTimeout(playDiceSound, 200);
 
 
 function animate() {
@@ -347,6 +347,6 @@ function throwClicked(){
   roll();
   console.log(is_rolling);
   setTimeout(doneRolling, 3500);
-  setTimeout(playDiceSound, 1500);
+  setTimeout(playDiceSound, 800);
   throw_btn.disabled = true;
 }
