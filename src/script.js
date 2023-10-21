@@ -178,6 +178,45 @@ groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 physicsWorld.addBody(groundBody);
 //physicsWorld.addBody(southBarrier);
 
+const northWallBody = new CANNON.Body({
+  type: CANNON.Body.STATIC,
+  shape: new CANNON.Plane,
+  material: groundPhysMat,
+  position: new CANNON.Vec3(0,0,-22)
+})
+
+physicsWorld.addBody(northWallBody);
+
+const southWallBody = new CANNON.Body({
+  type: CANNON.Body.STATIC,
+  shape: new CANNON.Plane,
+  material: groundPhysMat,
+  position: new CANNON.Vec3(0,0,12)
+})
+southWallBody.quaternion.setFromEuler(0, -Math.PI, 0);
+
+physicsWorld.addBody(southWallBody);
+
+const eastWallBody = new CANNON.Body({
+  type: CANNON.Body.STATIC,
+  shape: new CANNON.Plane,
+  material: groundPhysMat,
+  position: new CANNON.Vec3(40,0,0)
+})
+eastWallBody.quaternion.setFromEuler(0, -Math.PI/2, 0);
+
+physicsWorld.addBody(eastWallBody);
+
+const westWallBody = new CANNON.Body({
+  type: CANNON.Body.STATIC,
+  shape: new CANNON.Plane,
+  material: groundPhysMat,
+  position: new CANNON.Vec3(-40,0,0)
+})
+westWallBody.quaternion.setFromEuler(0, Math.PI/2, 0);
+
+physicsWorld.addBody(westWallBody);
+
 const boxPhysMat = new CANNON.Material();
 const diceBody = new CANNON.Body({
   mass: 1,
@@ -188,6 +227,8 @@ const diceBody = new CANNON.Body({
 diceBody.position.set(0, 3, 0);
 physicsWorld.addBody(diceBody);
 
+
+
 //diceBody.angularVelocity.set(0, 6, 3);
 //diceBody.applyImpulse(new CANNON.Vec3(-4, 3, 1),new CANNON.Vec3(1, 0, 0));
 //diceBody.angularDamping = 0.5;
@@ -195,7 +236,7 @@ physicsWorld.addBody(diceBody);
 const groundBoxContactMat = new CANNON.ContactMaterial(
   groundPhysMat,
   boxPhysMat,
-  {restitution:0.0,friction:0.2}
+  {restitution:0.0,friction:0.01}
 );
 
 physicsWorld.addContactMaterial(groundBoxContactMat);
@@ -218,8 +259,6 @@ function roll(){
 
   var corner_no = generateRandom(1,5);
   
-
-
   if (corner_no === 1){
     var minx = 0;
     var maxx = 1;
@@ -264,7 +303,7 @@ function roll(){
   diceBody.velocity.set(0,0,0);
   //diceBody.angularVelocity.set(0,0,0);
   //diceBody.applyImpulse(new CANNON.Vec3(xImpulse*35, 0, zImpulse*35),new CANNON.Vec3(0, 0, 0))
-  diceBody.applyForce(new CANNON.Vec3(xImpulse*2000, 0, zImpulse*2000),new CANNON.Vec3(0, 0, 0))
+  diceBody.applyForce(new CANNON.Vec3(xImpulse*6500, 0, zImpulse*6500),new CANNON.Vec3(0, 0, 0))
 }
 
 function doneRolling(){
