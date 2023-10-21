@@ -8,6 +8,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 
+
 /////////////////////////////////////////////////////////////////////////
 //// DRACO LOADER TO LOAD DRACO COMPRESSED MODELS FROM BLENDER
 const dracoLoader = new DRACOLoader()
@@ -41,7 +42,7 @@ container.appendChild(renderer.domElement) // add the renderer to html div
 ///// CAMERAS CONFIG
 const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 2000 );
 scene.add(camera)
-camera.position.set(5,45,30); // Set position like this
+camera.position.set(0,50,0); // Set position like this
 camera.lookAt(new THREE.Vector3(0,0,0)); // Set look at coordinate like this
 
 
@@ -59,7 +60,7 @@ window.addEventListener('resize', () => {
 
 /////////////////////////////////////////////////////////////////////////
 ///// CREATE ORBIT CONTROLS
-const controls = new OrbitControls(camera, renderer.domElement)
+//const controls = new OrbitControls(camera, renderer.domElement)
 
 /////////////////////////////////////////////////////////////////////////
 ///// SCENE LIGHTS
@@ -104,7 +105,7 @@ loader.load( 'models/gltf/dice.glb', function ( gltf ) {
 
 	dice =  gltf.scene;
   dice.scale.set(2,2,2);
-  dice.position.set(0, 5, 0)
+  dice.position.set(0, 3, 0)
   dice.castShadow = true;
   dice.receiveShadow = true;
   scene.add(dice);
@@ -126,7 +127,7 @@ plane.receiveShadow = true;
 plane.castShadow = true;
 //scene.add( plane );
 
-
+/*
 /////////////////////////////////////////////////////////////////////////
 //// DEFINE ORBIT CONTROLS LIMITS
 function setOrbitControlsLimits(){
@@ -140,14 +141,14 @@ function setOrbitControlsLimits(){
 }
 
 setOrbitControlsLimits()
-
+*/
 /////////////////////////////////////////////////////////////////////////
 //// RENDER LOOP FUNCTION
 function rendeLoop() {
 
     TWEEN.update() // update animations
 
-    controls.update() // update orbit controls
+    //controls.update() // update orbit controls
 
     renderer.render(scene, camera) // render the scene using the camera
 
@@ -167,7 +168,7 @@ const physicsWorld = new CANNON.World({
 
 const groundBody = new CANNON.Body({
   type: CANNON.Body.STATIC,
-  shape: new CANNON.Box(new CANNON.Vec3(50,50,1)),
+  shape: new CANNON.Plane,
   material: groundPhysMat,
 })
 
@@ -184,17 +185,17 @@ const diceBody = new CANNON.Body({
   material: boxPhysMat
 });
 
-diceBody.position.set(0, 5, 0);
+diceBody.position.set(0, 3, 0);
 physicsWorld.addBody(diceBody);
 
 //diceBody.angularVelocity.set(0, 6, 3);
 //diceBody.applyImpulse(new CANNON.Vec3(-4, 3, 1),new CANNON.Vec3(1, 0, 0));
-diceBody.angularDamping = 0.5;
+//diceBody.angularDamping = 0.5;
 
 const groundBoxContactMat = new CANNON.ContactMaterial(
   groundPhysMat,
   boxPhysMat,
-  {restitution:0.1,friction:0.02}
+  {restitution:0.0,friction:0.2}
 );
 
 physicsWorld.addContactMaterial(groundBoxContactMat);
@@ -202,17 +203,68 @@ physicsWorld.addContactMaterial(groundBoxContactMat);
 ///////////////////////////////////////////////////
 ////// ROLL FUNCTION
 
+function generateRandom(min = 0, max = 100) {
+  let difference = max - min;
+  let rand = Math.random(); 
+  rand = Math.floor( rand * difference);
+  rand = rand + min;
+  return rand;
+}
+
+console.log(generateRandom());
+
+
 function roll(){
-  var min = -1000;
-  var max = 1000;
-  var xImpulse = Math.random() * (max - min) + min;
-  var yImpulse = Math.random() * (max - min) + min;
-  var zImpulse = Math.random() * (max - min) + min;
-  diceBody.position.set(0, 10, 0);
+
+  var corner_no = generateRandom(1,5);
+  
+
+
+  if (corner_no === 1){
+    var minx = 0;
+    var maxx = 1;
+    var minz = -1;
+    var maxz = 0;
+    diceBody.position.set(-30, 3, 10);
+    console.log("mr corner 1");
+    console.log();
+  }
+
+  if (corner_no === 2){
+    var minx = -1;
+    var maxx = 0;
+    var minz = -1;
+    var maxz = 0;
+    diceBody.position.set(30, 3, 10);
+    console.log("mr corner 2")
+  }
+
+  if (corner_no === 3){
+    var minx = 0;
+    var maxx = 1;
+    var minz = 0;
+    var maxz = 1;
+    diceBody.position.set(-30, 3, -20);
+    console.log("mr corner 3")
+  }
+
+  if (corner_no === 4){
+    var minx = -1;
+    var maxx = 0;
+    var minz = 0;
+    var maxz = 1;
+    diceBody.position.set(30, 3, -20);
+    console.log("mr corner 4")
+  }
+
+  var xImpulse = Math.random() * (maxx - minx) + minx;
+  //var yImpulse = Math.random() * (max - min) + min;
+  var zImpulse = Math.random() * (maxz - minz) + minz;
+  console.log("Impulse.x = " + xImpulse + " | " + "Impulse.z = " + zImpulse );
   diceBody.velocity.set(0,0,0);
-  diceBody.angularVelocity.set(0,0,0);
-  //diceBody.applyImpulse(new CANNON.Vec3(xImpulse, yImpulse, zImpulse),new CANNON.Vec3(1, 0, 0))
-  diceBody.applyForce(new CANNON.Vec3(xImpulse, 0, zImpulse),new CANNON.Vec3(0, 0, 0))
+  //diceBody.angularVelocity.set(0,0,0);
+  //diceBody.applyImpulse(new CANNON.Vec3(xImpulse*35, 0, zImpulse*35),new CANNON.Vec3(0, 0, 0))
+  diceBody.applyForce(new CANNON.Vec3(xImpulse*2000, 0, zImpulse*2000),new CANNON.Vec3(0, 0, 0))
 }
 
 function doneRolling(){
