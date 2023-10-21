@@ -42,7 +42,7 @@ container.appendChild(renderer.domElement) // add the renderer to html div
 ///// CAMERAS CONFIG
 const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 2000 );
 scene.add(camera)
-camera.position.set(0,50,0); // Set position like this
+camera.position.set(0,25,0); // Set position like this
 camera.lookAt(new THREE.Vector3(0,0,0)); // Set look at coordinate like this
 
 
@@ -163,7 +163,7 @@ rendeLoop() //start rendering
 const groundPhysMat = new CANNON.Material();
 
 const physicsWorld = new CANNON.World({
-  gravity: new CANNON.Vec3(0, -11.82, 0),
+  gravity: new CANNON.Vec3(0, -9.82, 0),
 });
 
 const groundBody = new CANNON.Body({
@@ -182,7 +182,7 @@ const northWallBody = new CANNON.Body({
   type: CANNON.Body.STATIC,
   shape: new CANNON.Plane,
   material: groundPhysMat,
-  position: new CANNON.Vec3(0,0,-17)
+  position: new CANNON.Vec3(0,0,-10)
 })
 
 physicsWorld.addBody(northWallBody);
@@ -191,7 +191,7 @@ const southWallBody = new CANNON.Body({
   type: CANNON.Body.STATIC,
   shape: new CANNON.Plane,
   material: groundPhysMat,
-  position: new CANNON.Vec3(0,0,12)
+  position: new CANNON.Vec3(0,0,8)
 })
 southWallBody.quaternion.setFromEuler(0, -Math.PI, 0);
 
@@ -201,7 +201,7 @@ const eastWallBody = new CANNON.Body({
   type: CANNON.Body.STATIC,
   shape: new CANNON.Plane,
   material: groundPhysMat,
-  position: new CANNON.Vec3(30,0,0)
+  position: new CANNON.Vec3(15,0,0)
 })
 eastWallBody.quaternion.setFromEuler(0, -Math.PI/2, 0);
 
@@ -211,7 +211,7 @@ const westWallBody = new CANNON.Body({
   type: CANNON.Body.STATIC,
   shape: new CANNON.Plane,
   material: groundPhysMat,
-  position: new CANNON.Vec3(-30,0,0)
+  position: new CANNON.Vec3(-15,0,0)
 })
 westWallBody.quaternion.setFromEuler(0, Math.PI/2, 0);
 
@@ -236,7 +236,7 @@ physicsWorld.addBody(diceBody);
 const groundBoxContactMat = new CANNON.ContactMaterial(
   groundPhysMat,
   boxPhysMat,
-  {restitution:0.0,friction:0.05}
+  {restitution:0.0,friction:0.9}
 );
 
 physicsWorld.addContactMaterial(groundBoxContactMat);
@@ -264,7 +264,7 @@ function roll(){
     var maxx = 1;
     var minz = -1;
     var maxz = 0;
-    diceBody.position.set(-25, 3, 10);
+    diceBody.position.set(-12, 3, 5);
     console.log("mr corner 1");
     console.log();
   }
@@ -274,7 +274,7 @@ function roll(){
     var maxx = 0;
     var minz = -1;
     var maxz = 0;
-    diceBody.position.set(25, 3, 10);
+    diceBody.position.set(12, 3, 5);
     console.log("mr corner 2")
   }
 
@@ -283,7 +283,7 @@ function roll(){
     var maxx = 1;
     var minz = 0;
     var maxz = 1;
-    diceBody.position.set(-25, 3, -15);
+    diceBody.position.set(-12, 3, -7);
     console.log("mr corner 3")
   }
 
@@ -292,7 +292,7 @@ function roll(){
     var maxx = 0;
     var minz = 0;
     var maxz = 1;
-    diceBody.position.set(25, 3, -15);
+    diceBody.position.set(12, 3, -7);
     console.log("mr corner 4")
   }
 
