@@ -181,8 +181,8 @@ physicsWorld.addBody(groundBody);
 const northWallBody = new CANNON.Body({
   type: CANNON.Body.STATIC,
   shape: new CANNON.Plane,
-  material: groundPhysMat,
-  position: new CANNON.Vec3(0,0,-10)
+  //material: groundPhysMat,
+  position: new CANNON.Vec3(0,0,-8)
 })
 
 physicsWorld.addBody(northWallBody);
@@ -221,7 +221,7 @@ const boxPhysMat = new CANNON.Material();
 const diceBody = new CANNON.Body({
   mass: 1,
   shape: new CANNON.Box(new CANNON.Vec3(1,1,1)),
-  material: boxPhysMat
+  //material: boxPhysMat
 });
 
 diceBody.position.set(0, 3, 0);
@@ -303,7 +303,7 @@ function roll(){
   diceBody.velocity.set(0,0,0);
   diceBody.angularVelocity.set(0,0,0);
   //diceBody.applyImpulse(new CANNON.Vec3(xImpulse*35, 0, zImpulse*35),new CANNON.Vec3(0, 0, 0))
-  diceBody.applyForce(new CANNON.Vec3(xImpulse*7500, 0, zImpulse*7500),new CANNON.Vec3(0, 0, 0))
+  diceBody.applyForce(new CANNON.Vec3(xImpulse*5500, 0, zImpulse*5500),new CANNON.Vec3(0, 0, 0))
 }
 
 function doneRolling(){
