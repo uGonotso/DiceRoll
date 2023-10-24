@@ -351,7 +351,7 @@ throw_btn.addEventListener('click', throwClicked);
 function throwClicked(){
   roll();
   console.log(is_rolling);
-  setTimeout(doneRolling, 3500);
+  setTimeout(doneRolling, 3800);
   setTimeout(playDiceSound, 150);
   throw_btn.disabled = true;
 }
