@@ -165,7 +165,7 @@ rendeLoop() //start rendering
 const groundPhysMat = new CANNON.Material();
 
 const physicsWorld = new CANNON.World({
-  gravity: new CANNON.Vec3(0, -13.82, 0),
+  gravity: new CANNON.Vec3(0, -15.82, 0),
 });
 
 const groundBody = new CANNON.Body({
@@ -308,7 +308,7 @@ function roll(){
   diceBody.velocity.set(0,0,0);
   diceBody.angularVelocity.set(0,0,0);
   //diceBody.applyImpulse(new CANNON.Vec3(xImpulse*35, 0, zImpulse*35),new CANNON.Vec3(0, 0, 0))
-  diceBody.applyForce(new CANNON.Vec3(impulse.x*2700, 0, impulse.y*2700),new CANNON.Vec3(0, 0, 0))
+  diceBody.applyForce(new CANNON.Vec3(impulse.x*2300, 0, impulse.y*1600),new CANNON.Vec3(0, 0, 0))
 }
 
 function doneRolling(){
