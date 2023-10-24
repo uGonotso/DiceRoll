@@ -165,7 +165,7 @@ rendeLoop() //start rendering
 const groundPhysMat = new CANNON.Material();
 
 const physicsWorld = new CANNON.World({
-  gravity: new CANNON.Vec3(0, -15.82, 0),
+  gravity: new CANNON.Vec3(0, -17.82, 0),
 });
 
 const groundBody = new CANNON.Body({
@@ -184,7 +184,7 @@ const northWallBody = new CANNON.Body({
   type: CANNON.Body.STATIC,
   shape: new CANNON.Plane,
   material: groundPhysMat,
-  position: new CANNON.Vec3(0,0,-8)
+  position: new CANNON.Vec3(0,0,-11)
 })
 
 physicsWorld.addBody(northWallBody);
@@ -193,7 +193,7 @@ const southWallBody = new CANNON.Body({
   type: CANNON.Body.STATIC,
   shape: new CANNON.Plane,
   material: groundPhysMat,
-  position: new CANNON.Vec3(0,0,8)
+  position: new CANNON.Vec3(0,0,11)
 })
 southWallBody.quaternion.setFromEuler(0, -Math.PI, 0);
 
@@ -203,7 +203,7 @@ const eastWallBody = new CANNON.Body({
   type: CANNON.Body.STATIC,
   shape: new CANNON.Plane,
   material: groundPhysMat,
-  position: new CANNON.Vec3(15,0,0)
+  position: new CANNON.Vec3(23,0,0)
 })
 eastWallBody.quaternion.setFromEuler(0, -Math.PI/2, 0);
 
@@ -213,7 +213,7 @@ const westWallBody = new CANNON.Body({
   type: CANNON.Body.STATIC,
   shape: new CANNON.Plane,
   material: groundPhysMat,
-  position: new CANNON.Vec3(-15,0,0)
+  position: new CANNON.Vec3(-23,0,0)
 })
 westWallBody.quaternion.setFromEuler(0, Math.PI/2, 0);
 
@@ -238,7 +238,7 @@ physicsWorld.addBody(diceBody);
 const groundBoxContactMat = new CANNON.ContactMaterial(
   groundPhysMat,
   boxPhysMat,
-  {restitution:0.1,friction:1.2}
+  {restitution:0.05,friction:1.4}
 );
 
 physicsWorld.addContactMaterial(groundBoxContactMat);
@@ -308,7 +308,7 @@ function roll(){
   diceBody.velocity.set(0,0,0);
   diceBody.angularVelocity.set(0,0,0);
   //diceBody.applyImpulse(new CANNON.Vec3(xImpulse*35, 0, zImpulse*35),new CANNON.Vec3(0, 0, 0))
-  diceBody.applyForce(new CANNON.Vec3(impulse.x*2300, 0, impulse.y*1600),new CANNON.Vec3(0, 0, 0))
+  diceBody.applyForce(new CANNON.Vec3(impulse.x*2500, 0, impulse.y*1700),new CANNON.Vec3(0, 0, 0))
 }
 
 function doneRolling(){
