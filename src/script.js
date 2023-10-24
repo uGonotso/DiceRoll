@@ -42,7 +42,7 @@ container.appendChild(renderer.domElement) // add the renderer to html div
 ///// CAMERAS CONFIG
 const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 2000 );
 scene.add(camera)
-camera.position.set(0,25,0); // Set position like this
+camera.position.set(0,30,0); // Set position like this
 camera.lookAt(new THREE.Vector3(0,0,0)); // Set look at coordinate like this
 
 
@@ -127,6 +127,7 @@ plane.receiveShadow = true;
 plane.castShadow = true;
 //scene.add( plane );
 
+
 /*
 /////////////////////////////////////////////////////////////////////////
 //// DEFINE ORBIT CONTROLS LIMITS
@@ -139,9 +140,10 @@ function setOrbitControlsLimits(){
     controls.enableZoom = true
     //controls.maxPolarAngle = Math.PI /2.5
 }
-
 setOrbitControlsLimits()
 */
+
+
 /////////////////////////////////////////////////////////////////////////
 //// RENDER LOOP FUNCTION
 function rendeLoop() {
@@ -163,7 +165,7 @@ rendeLoop() //start rendering
 const groundPhysMat = new CANNON.Material();
 
 const physicsWorld = new CANNON.World({
-  gravity: new CANNON.Vec3(0, -9.82, 0),
+  gravity: new CANNON.Vec3(0, -13.82, 0),
 });
 
 const groundBody = new CANNON.Body({
@@ -236,7 +238,7 @@ physicsWorld.addBody(diceBody);
 const groundBoxContactMat = new CANNON.ContactMaterial(
   groundPhysMat,
   boxPhysMat,
-  {restitution:0.0,friction:0.9}
+  {restitution:0.5,friction:0.9}
 );
 
 physicsWorld.addContactMaterial(groundBoxContactMat);
@@ -264,7 +266,7 @@ function roll(){
     var maxx = 1;
     var minz = -1;
     var maxz = 0;
-    diceBody.position.set(-12, 3, 5);
+    diceBody.position.set(-12, 2, 5);
     console.log("mr corner 1");
     console.log();
   }
@@ -274,7 +276,7 @@ function roll(){
     var maxx = 0;
     var minz = -1;
     var maxz = 0;
-    diceBody.position.set(12, 3, 5);
+    diceBody.position.set(12, 2, 5);
     console.log("mr corner 2")
   }
 
@@ -283,7 +285,7 @@ function roll(){
     var maxx = 1;
     var minz = 0;
     var maxz = 1;
-    diceBody.position.set(-12, 3, -7);
+    diceBody.position.set(-12, 2, -7);
     console.log("mr corner 3")
   }
 
@@ -292,7 +294,7 @@ function roll(){
     var maxx = 0;
     var minz = 0;
     var maxz = 1;
-    diceBody.position.set(12, 3, -7);
+    diceBody.position.set(12, 2, -7);
     console.log("mr corner 4")
   }
 
@@ -303,7 +305,7 @@ function roll(){
   diceBody.velocity.set(0,0,0);
   diceBody.angularVelocity.set(0,0,0);
   //diceBody.applyImpulse(new CANNON.Vec3(xImpulse*35, 0, zImpulse*35),new CANNON.Vec3(0, 0, 0))
-  diceBody.applyForce(new CANNON.Vec3(xImpulse*5500, 0, zImpulse*5500),new CANNON.Vec3(0, 0, 0))
+  diceBody.applyForce(new CANNON.Vec3(xImpulse*3500, 0, zImpulse*3500),new CANNON.Vec3(0, 0, 0))
 }
 
 function doneRolling(){
@@ -349,4 +351,9 @@ function throwClicked(){
   setTimeout(doneRolling, 3500);
   setTimeout(playDiceSound, 800);
   throw_btn.disabled = true;
+}
+
+
+function initPhysics(){
+  Ammo.then()
 }

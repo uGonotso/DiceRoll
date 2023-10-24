@@ -15,7 +15,6 @@
     "cannon-es": "^0.20.0",
     "cannon-es-debugger": "^1.0.0",
     "clean-webpack-plugin": "^4.0.0",
-    "copy-webpack-plugin": "^9.0.1",
     "css-loader": "^6.5.0",
     "file-loader": "^6.2.0",
     "html-loader": "^3.0.0",
@@ -33,6 +32,7 @@
     "webpack-merge": "^5.8.0"
   },
   "devDependencies": {
+    "copy-webpack-plugin": "^11.0.0",
     "webpack-cli": "^5.1.4"
   }
 }
