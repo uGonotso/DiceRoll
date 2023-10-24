@@ -183,7 +183,7 @@ physicsWorld.addBody(groundBody);
 const northWallBody = new CANNON.Body({
   type: CANNON.Body.STATIC,
   shape: new CANNON.Plane,
-  //material: groundPhysMat,
+  material: groundPhysMat,
   position: new CANNON.Vec3(0,0,-8)
 })
 
@@ -223,7 +223,7 @@ const boxPhysMat = new CANNON.Material();
 const diceBody = new CANNON.Body({
   mass: 1,
   shape: new CANNON.Box(new CANNON.Vec3(1,1,1)),
-  //material: boxPhysMat
+  material: boxPhysMat
 });
 
 diceBody.position.set(0, 3, 0);
@@ -238,7 +238,7 @@ physicsWorld.addBody(diceBody);
 const groundBoxContactMat = new CANNON.ContactMaterial(
   groundPhysMat,
   boxPhysMat,
-  {restitution:0.5,friction:0.9}
+  {restitution:0.1,friction:1.2}
 );
 
 physicsWorld.addContactMaterial(groundBoxContactMat);
@@ -266,7 +266,7 @@ function roll(){
     var maxx = 1;
     var minz = -1;
     var maxz = 0;
-    diceBody.position.set(-12, 2, 5);
+    diceBody.position.set(-12, 1.2, 5);
     console.log("mr corner 1");
     console.log();
   }
@@ -276,7 +276,7 @@ function roll(){
     var maxx = 0;
     var minz = -1;
     var maxz = 0;
-    diceBody.position.set(12, 2, 5);
+    diceBody.position.set(12, 1.1, 5);
     console.log("mr corner 2")
   }
 
@@ -285,7 +285,7 @@ function roll(){
     var maxx = 1;
     var minz = 0;
     var maxz = 1;
-    diceBody.position.set(-12, 2, -7);
+    diceBody.position.set(-12, 1.1, -7);
     console.log("mr corner 3")
   }
 
@@ -294,18 +294,21 @@ function roll(){
     var maxx = 0;
     var minz = 0;
     var maxz = 1;
-    diceBody.position.set(12, 2, -7);
+    diceBody.position.set(12, 1.1, -7);
     console.log("mr corner 4")
   }
 
   var xImpulse = Math.random() * (maxx - minx) + minx;
   //var yImpulse = Math.random() * (max - min) + min;
   var zImpulse = Math.random() * (maxz - minz) + minz;
+
+  var impulse = new THREE.Vector2(xImpulse, zImpulse);
+  impulse.normalize();
   console.log("Impulse.x = " + xImpulse + " | " + "Impulse.z = " + zImpulse );
   diceBody.velocity.set(0,0,0);
   diceBody.angularVelocity.set(0,0,0);
   //diceBody.applyImpulse(new CANNON.Vec3(xImpulse*35, 0, zImpulse*35),new CANNON.Vec3(0, 0, 0))
-  diceBody.applyForce(new CANNON.Vec3(xImpulse*3500, 0, zImpulse*3500),new CANNON.Vec3(0, 0, 0))
+  diceBody.applyForce(new CANNON.Vec3(impulse.x*3000, 0, impulse.y*3000),new CANNON.Vec3(0, 0, 0))
 }
 
 function doneRolling(){
@@ -320,8 +323,8 @@ function playDiceSound(){
   diceSound.play();
 }
 
-setTimeout(doneRolling, 3500);
-//setTimeout(playDiceSound, 200);
+setTimeout(doneRolling, 1500);
+
 
 
 function animate() {
@@ -349,11 +352,6 @@ function throwClicked(){
   roll();
   console.log(is_rolling);
   setTimeout(doneRolling, 3500);
-  setTimeout(playDiceSound, 800);
+  setTimeout(playDiceSound, 100);
   throw_btn.disabled = true;
-}
-
-
-function initPhysics(){
-  Ammo.then()
 }
