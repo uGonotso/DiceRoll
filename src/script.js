@@ -304,7 +304,7 @@ function roll(){
   diceBody.velocity.set(0,0,0);
   diceBody.angularVelocity.set(0,0,0);
   //diceBody.applyImpulse(new CANNON.Vec3(xImpulse*35, 0, zImpulse*35),new CANNON.Vec3(0, 0, 0))
-  diceBody.applyForce(new CANNON.Vec3(impulse.x*5600, 0, impulse.y*3500),new CANNON.Vec3(0, 0, 0))
+  diceBody.applyForce(new CANNON.Vec3(impulse.x*5300, 0, impulse.y*3300),new CANNON.Vec3(0, 0, 0))
 }
 
 function doneRolling(){
