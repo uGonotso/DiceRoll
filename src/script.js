@@ -388,5 +388,8 @@ window.addEventListener("click", (event) => {});
 onclick = (event) => {
   if (is_overlapping_dice == true){
     roll();
+    setTimeout(doneRolling, 3800);
+    setTimeout(playDiceSound, 150);
+    throw_btn.disabled = true;
   }
 };
