@@ -75,6 +75,7 @@ scene.add(sunLight)
 
 /////////////////////////////////////////////////////////////////////////
 ////// VARIABLES AND CONSTS
+var is_overlapping_dice = false
 var is_rolling = false;
 const throw_btn = document.getElementById("Throw");
 throw_btn.disabled = true;
@@ -119,13 +120,13 @@ loader.load( 'models/gltf/dice.glb', function ( gltf ) {
 //////////////////////////////////////////////////////////////////////////
 ///// ADD PLANE TO SCENE
 const geometry = new THREE.PlaneGeometry( 200, 200 );
-const material = new THREE.MeshBasicMaterial( {color: 0xFFFFFF, side: THREE.DoubleSide,} );
+const material = new THREE.MeshBasicMaterial( {color: 0xEEEEEE, side: THREE.DoubleSide,} );
 const plane = new THREE.Mesh( geometry, material );
 plane.rotateX( - Math.PI / 2);
-plane.position.set(0,1,0);
+plane.position.set(0,0.1,0);
 plane.receiveShadow = true;
 plane.castShadow = true;
-//scene.add( plane );
+scene.add( plane );
 
 
 /*
@@ -138,7 +139,7 @@ function setOrbitControlsLimits(){
     controls.maxDistance = 500
     controls.enableRotate = true
     controls.enableZoom = true
-    //controls.maxPolarAngle = Math.PI /2.5
+    controls.maxPolarAngle = Math.PI /2.5
 }
 setOrbitControlsLimits()
 */
@@ -165,7 +166,7 @@ rendeLoop() //start rendering
 const groundPhysMat = new CANNON.Material();
 
 const physicsWorld = new CANNON.World({
-  gravity: new CANNON.Vec3(0, -17.82, 0),
+  gravity: new CANNON.Vec3(0, -15.82, 0),
 });
 
 const groundBody = new CANNON.Body({
@@ -304,8 +305,38 @@ function roll(){
   diceBody.velocity.set(0,0,0);
   diceBody.angularVelocity.set(0,0,0);
   //diceBody.applyImpulse(new CANNON.Vec3(xImpulse*35, 0, zImpulse*35),new CANNON.Vec3(0, 0, 0))
-  diceBody.applyForce(new CANNON.Vec3(impulse.x*5300, 0, impulse.y*3300),new CANNON.Vec3(0, 0, 0))
+  diceBody.applyForce(new CANNON.Vec3(impulse.x*6300, 200, impulse.y*4300),new CANNON.Vec3(0, 0, 0))
 }
+
+//////////////////////////////////////////////////////////
+////// RAY CAST
+  const pointer = new THREE.Vector2();
+  const raycaster = new THREE.Raycaster();
+
+  function onPointerMove( event ) {
+
+	// calculate pointer position in normalized device coordinates
+	// (-1 to +1) for both components
+
+	pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+  raycaster.setFromCamera(pointer, camera);
+  const intersects = raycaster.intersectObjects(scene.children);
+  for ( let i = 0; i < intersects.length; i ++ ) {
+    if (intersects.length > 2){
+      is_overlapping_dice = true;
+    }
+    else{
+      is_overlapping_dice = false;
+    }
+		
+	}
+ 
+}
+
+
+window.addEventListener( 'pointermove', onPointerMove );
 
 function doneRolling(){
   is_rolling = true;
@@ -351,3 +382,11 @@ function throwClicked(){
   setTimeout(playDiceSound, 150);
   throw_btn.disabled = true;
 }
+
+window.addEventListener("click", (event) => {});
+
+onclick = (event) => {
+  if (is_overlapping_dice == true){
+    roll();
+  }
+};
