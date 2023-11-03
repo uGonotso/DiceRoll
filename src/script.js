@@ -25,7 +25,7 @@ document.body.appendChild(container)
 /////////////////////////////////////////////////////////////////////////
 ///// SCENE CREATION
 const scene = new THREE.Scene()
-scene.background = new THREE.Color('#EEEEEE')
+scene.background = new THREE.Color(0xeeeeee)
 
 
 /////////////////////////////////////////////////////////////////////////
@@ -64,10 +64,10 @@ window.addEventListener('resize', () => {
 
 /////////////////////////////////////////////////////////////////////////
 ///// SCENE LIGHTS
-const ambient = new THREE.AmbientLight(0xFFFFFF, 0.5)
+const ambient = new THREE.AmbientLight(0xEEEEEE, 0.5)
 scene.add(ambient)
 
-const sunLight = new THREE.DirectionalLight(0xFFFFFF, 1.96)
+const sunLight = new THREE.DirectionalLight(0xEEEEEE, 1.96)
 sunLight.position.set(-69,44,14)
 sunLight.castShadow = true;
 scene.add(sunLight)
@@ -126,7 +126,7 @@ plane.rotateX( - Math.PI / 2);
 plane.position.set(0,0.1,0);
 plane.receiveShadow = true;
 plane.castShadow = true;
-scene.add( plane );
+//scene.add( plane );
 
 
 /*
@@ -324,7 +324,7 @@ function roll(){
   raycaster.setFromCamera(pointer, camera);
   const intersects = raycaster.intersectObjects(scene.children);
   for ( let i = 0; i < intersects.length; i ++ ) {
-    if (intersects.length > 2){
+    if (intersects.length > 1){
       is_overlapping_dice = true;
     }
     else{
